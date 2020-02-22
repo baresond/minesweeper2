@@ -13,7 +13,9 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.input.MouseButton;
@@ -22,6 +24,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 /**
@@ -63,7 +67,7 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void btRefreshClick(ActionEvent event) {
-        double x = (pocetPoli*velikost) + (velikost/2);
+        double x = (pocetPoli*velikost) + (velikost);
         double y = x / 90;
         int pocetMin = 25;
         pocetVlajecekCount = pocetMin;
@@ -73,16 +77,18 @@ public class FXMLDocumentController implements Initializable {
         System.out.println(form1.getScene().getWindow().getHeight()+ " " + form1.getScene().getWindow().getWidth());
         paneSplite.setDividerPositions(0.1f);
         System.out.println(paneMenu.getHeight() + " " + paneMenu.getWidth()+ "\n" + paneGameField.getHeight() + " " + paneGameField.getWidth());
-        btRefresh.setPrefSize(((y-16) /100 * 10)/4*3, ((y-16) /100 * 10)/4*3);
+        btRefresh.setPrefSize(((y-18) /100 * 10)/4*3, ((y-18) /100 * 10)/4*3);
         
         btRefresh.setTranslateY((paneMenu.getHeight()/2) - (btRefresh.getPrefHeight()/ 2));
         btRefresh.setTranslateX((x / 2) - (btRefresh.getPrefWidth()/ 2));
         generuj(pocetPoli, pocetMin);
         pocetVlajecek.setPrefSize(((y-16) /100 * 10)/4*3, ((y-16) /100 * 10)/4*3);
-        pocetVlajecek.setFont(new Font(velikost));
+        pocetVlajecek.setFont(Font.font("Calibri", FontWeight.BOLD, FontPosture.REGULAR, velikost));
         pocetVlajecek.setText(String.valueOf(pocetVlajecekCount));
-        pocetVlajecek.setTranslateX((x/5*3)-(pocetVlajecek.getPrefWidth()/2));
-        pocetVlajecek.setTranslateY((paneMenu.getHeight()/2) - (pocetVlajecek.getPrefHeight()/2));
+        pocetVlajecek.setTranslateX((((x-velikost)/5)*2)-(pocetVlajecek.getPrefWidth()));
+        pocetVlajecek.setTranslateY((paneMenu.getHeight()/2) - (pocetVlajecek.getPrefHeight()));
+        prohra = false;
+        vyhra = false;
     }
     
     public void generuj(int pocetXYdlazdic, int pocetMin){
@@ -194,6 +200,8 @@ public class FXMLDocumentController implements Initializable {
                                     System.out.println("Je mina");
                                     prohra = true;
                                     System.out.println("Prohra");
+                                    Alert alert  = new Alert(Alert.AlertType.INFORMATION,"Prohra, pro opakování klikněta na restart", ButtonType.OK);
+                                    alert.show();
 
                                 }
                                 else{
@@ -206,7 +214,8 @@ public class FXMLDocumentController implements Initializable {
                                         Text text = new Text(String.valueOf(poleMin[x][y].getPocetMinVOkoli()));
                                         text.setX(rect.getX());
                                         text.setY(rect.getY()+velikost);
-                                        text.setFont(new Font(velikost));
+                                        
+                                        text.setFont(Font.font(velikost));
                                         paneGameField.getChildren().add(text);
                                     }
                                     else{
@@ -239,6 +248,8 @@ public class FXMLDocumentController implements Initializable {
                             if (pocetVykliklich + pocetMin == pocetXYdlazdic * pocetXYdlazdic) {
                                 vyhra = true;
                                 System.out.println("Vyhra");
+                                Alert alert  = new Alert(Alert.AlertType.INFORMATION,"Výhra, pro opakování klikněta na restart", ButtonType.OK);
+                                alert.show();
                             }
                         }
                     }
@@ -263,8 +274,8 @@ public class FXMLDocumentController implements Initializable {
                 rect.setFill(poleMin[x][y].getBarva());
                 Text text = new Text(String.valueOf(poleMin[x][y].getPocetMinVOkoli()));
                 text.setX(rect.getX());
-                text.setY(rect.getY()+40);
-                text.setFont(new Font(40));
+                text.setY(rect.getY()+velikost);
+                text.setFont(Font.font(velikost));
                 paneGameField.getChildren().add(text);
             }
         }
