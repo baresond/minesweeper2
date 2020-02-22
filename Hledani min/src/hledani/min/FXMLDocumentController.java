@@ -44,6 +44,8 @@ public class FXMLDocumentController implements Initializable {
     boolean vyhra = false;
     int pocetVykliklich;
     int pocetVlajecekCount = 0;
+    int velikost = 20;
+    int pocetPoli = 20;
     @FXML
     private AnchorPane form1;
     @FXML
@@ -61,7 +63,7 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void btRefreshClick(ActionEvent event) {
-        double x = (20*40) + 20;
+        double x = (pocetPoli*velikost) + (velikost/2);
         double y = x / 90;
         int pocetMin = 25;
         pocetVlajecekCount = pocetMin;
@@ -75,9 +77,9 @@ public class FXMLDocumentController implements Initializable {
         
         btRefresh.setTranslateY((paneMenu.getHeight()/2) - (btRefresh.getPrefHeight()/ 2));
         btRefresh.setTranslateX((x / 2) - (btRefresh.getPrefWidth()/ 2));
-        generuj(20, pocetMin);
+        generuj(pocetPoli, pocetMin);
         pocetVlajecek.setPrefSize(((y-16) /100 * 10)/4*3, ((y-16) /100 * 10)/4*3);
-        pocetVlajecek.setFont(new Font(40));
+        pocetVlajecek.setFont(new Font(velikost));
         pocetVlajecek.setText(String.valueOf(pocetVlajecekCount));
         pocetVlajecek.setTranslateX((x/5*3)-(pocetVlajecek.getPrefWidth()/2));
         pocetVlajecek.setTranslateY((paneMenu.getHeight()/2) - (pocetVlajecek.getPrefHeight()/2));
@@ -171,15 +173,15 @@ public class FXMLDocumentController implements Initializable {
         
         for (int i = 0; i < pocetXYdlazdic; i++) {
             for (int j = 0; j < pocetXYdlazdic; j++) {
-                Rectangle rect = new Rectangle((40 * i), (40 * j), 40, 40);
+                Rectangle rect = new Rectangle((velikost * i), (velikost * j), velikost, velikost);
                 rect.setFill(poleMin[i][j].getBarva());
                 rect.setStroke(Color.BLACK);
                 rect.setOnMouseClicked(new EventHandler<MouseEvent>(){
                     @Override
                     public void handle(MouseEvent e){
                         System.out.println("\nVýber Pole");
-                        int x = (int)rect.getX()/40;
-                        int y = (int)rect.getY()/40;
+                        int x = (int)rect.getX()/velikost;
+                        int y = (int)rect.getY()/velikost;
                         
                         if (!poleMin[x][y].isJePoKliknuti() && !prohra && !vyhra) {
                             System.out.println("Souřadnice: " + "[" + x + "," + y + "]");
@@ -203,8 +205,8 @@ public class FXMLDocumentController implements Initializable {
                                     if (poleMin[x][y].getPocetMinVOkoli() > 0) {
                                         Text text = new Text(String.valueOf(poleMin[x][y].getPocetMinVOkoli()));
                                         text.setX(rect.getX());
-                                        text.setY(rect.getY()+40);
-                                        text.setFont(new Font(40));
+                                        text.setY(rect.getY()+velikost);
+                                        text.setFont(new Font(velikost));
                                         paneGameField.getChildren().add(text);
                                     }
                                     else{
