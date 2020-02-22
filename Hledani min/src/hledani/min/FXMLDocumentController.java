@@ -16,6 +16,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
@@ -37,15 +38,18 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private AnchorPane paneGameField;
     
-    pole[][] poleMin;
+    Pole[][] poleMin;
     Rectangle[][] rectPole;
     boolean prohra = false;
     boolean vyhra = false;
     int pocetVykliklich;
+    int pocetVlajecekCount = 0;
     @FXML
     private AnchorPane form1;
     @FXML
     private SplitPane paneSplite;
+    @FXML
+    private Label pocetVlajecek;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -57,8 +61,10 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void btRefreshClick(ActionEvent event) {
-        double x = (15*40) + 20;
+        double x = (20*40) + 20;
         double y = x / 90;
+        int pocetMin = 25;
+        pocetVlajecekCount = pocetMin;
         y *= 100;
         form1.getScene().getWindow().setWidth(x);
         form1.getScene().getWindow().setHeight(y + 32);
@@ -69,88 +75,92 @@ public class FXMLDocumentController implements Initializable {
         
         btRefresh.setTranslateY((paneMenu.getHeight()/2) - (btRefresh.getPrefHeight()/ 2));
         btRefresh.setTranslateX((x / 2) - (btRefresh.getPrefWidth()/ 2));
-        generuj(10, 12);
+        generuj(20, pocetMin);
+        pocetVlajecek.setPrefSize(((y-16) /100 * 10)/4*3, ((y-16) /100 * 10)/4*3);
+        pocetVlajecek.setFont(new Font(40));
+        pocetVlajecek.setText(String.valueOf(pocetVlajecekCount));
+        pocetVlajecek.setTranslateX((x/5*3)-(pocetVlajecek.getPrefWidth()/2));
+        pocetVlajecek.setTranslateY((paneMenu.getHeight()/2) - (pocetVlajecek.getPrefHeight()/2));
     }
     
     public void generuj(int pocetXYdlazdic, int pocetMin){
-        poleMin = new pole[pocetXYdlazdic][pocetXYdlazdic];
+        poleMin = new Pole[pocetXYdlazdic][pocetXYdlazdic];
         rectPole = new Rectangle[pocetXYdlazdic][pocetXYdlazdic];
         Random random = new Random();
         pocetVykliklich = 0;
         prohra = false;
-        vyhra = false;
         
         for (int i = 0; i < pocetXYdlazdic; i++) {
             for (int j = 0; j < pocetXYdlazdic; j++) {
-                poleMin[i][j] = new pole(new Point(i,j),false);
+                poleMin[i][j] = new Pole(new Point(i,j),false);
             }
         }
-        
+        String str = "++";
         for (int i = 0; i < pocetMin; i++) {
             int x = random.nextInt(pocetXYdlazdic);
             int y = random.nextInt(pocetXYdlazdic);
-            if (!poleMin[x][y].jeMina) {
+            if (!poleMin[x][y].isJeMina()) {
                     poleMin[x][y].setJeMina(true);
                 System.out.println("Mina je na souřadnicích: " + "[" + x + "," + y + "]");
 
                 if (x == 0) {
-                    poleMin[x+1][y].pocetMinVOkoli++;
+                    poleMin[x+1][y].setPocetMinVOkoli(str);
                     if (y==0) {
-                        poleMin[x+1][y+1].pocetMinVOkoli++;
-                        poleMin[x][y+1].pocetMinVOkoli++;
+                        poleMin[x+1][y+1].setPocetMinVOkoli(str);
+                        poleMin[x][y+1].setPocetMinVOkoli(str);
                     }
                     else if (y==pocetXYdlazdic-1) {
-                        poleMin[x+1][y-1].pocetMinVOkoli++;
-                        poleMin[x][y-1].pocetMinVOkoli++;
+                        poleMin[x+1][y-1].setPocetMinVOkoli(str);
+                        poleMin[x][y-1].setPocetMinVOkoli(str);
                     }
                     else{
-                        poleMin[x+1][y-1].pocetMinVOkoli++;
-                        poleMin[x][y-1].pocetMinVOkoli++;
-                        poleMin[x+1][y+1].pocetMinVOkoli++;
-                        poleMin[x][y+1].pocetMinVOkoli++;
+                        poleMin[x+1][y-1].setPocetMinVOkoli(str);
+                        poleMin[x][y-1].setPocetMinVOkoli(str);
+                        poleMin[x+1][y+1].setPocetMinVOkoli(str);
+                        poleMin[x][y+1].setPocetMinVOkoli(str);
                     }
                 }
                 else if (x == pocetXYdlazdic-1) {
-                    poleMin[x-1][y].pocetMinVOkoli++;
+                    poleMin[x-1][y].setPocetMinVOkoli(str);
                     if (y==0) {
-                        poleMin[x-1][y+1].pocetMinVOkoli++;
-                        poleMin[x][y+1].pocetMinVOkoli++;
+                        poleMin[x-1][y+1].setPocetMinVOkoli(str);
+                        poleMin[x][y+1].setPocetMinVOkoli(str);
                     }
                     else if (y==pocetXYdlazdic-1) {
-                        poleMin[x-1][y-1].pocetMinVOkoli++;
-                        poleMin[x][y-1].pocetMinVOkoli++;
+                        poleMin[x-1][y-1].setPocetMinVOkoli(str);
+                        poleMin[x][y-1].setPocetMinVOkoli(str);
                     }
                     else{
-                        poleMin[x-1][y-1].pocetMinVOkoli++;
-                        poleMin[x][y-1].pocetMinVOkoli++;
-                        poleMin[x-1][y+1].pocetMinVOkoli++;
-                        poleMin[x][y+1].pocetMinVOkoli++;
+                        poleMin[x-1][y-1].setPocetMinVOkoli(str);
+                        poleMin[x][y-1].setPocetMinVOkoli(str);
+                        poleMin[x-1][y+1].setPocetMinVOkoli(str);
+                        poleMin[x][y+1].setPocetMinVOkoli(str);
                     }
                 }
                 else{
                     if (y==0) {
-                        poleMin[x+1][y].pocetMinVOkoli++;
-                        poleMin[x-1][y].pocetMinVOkoli++;
-                        poleMin[x][y+1].pocetMinVOkoli++;
-                        poleMin[x+1][y+1].pocetMinVOkoli++;
-                        poleMin[x-1][y+1].pocetMinVOkoli++;
+                        poleMin[x+1][y].setPocetMinVOkoli(str);
+                        poleMin[x-1][y].setPocetMinVOkoli(str);
+                        poleMin[x][y+1].setPocetMinVOkoli(str);
+                        poleMin[x+1][y+1].setPocetMinVOkoli(str);
+                        poleMin[x-1][y+1].setPocetMinVOkoli(str);
                     }
                     else if (y==pocetXYdlazdic-1) {
-                        poleMin[x+1][y].pocetMinVOkoli++;
-                        poleMin[x-1][y].pocetMinVOkoli++;
-                        poleMin[x][y-1].pocetMinVOkoli++;
-                        poleMin[x+1][y-1].pocetMinVOkoli++;
-                        poleMin[x-1][y-1].pocetMinVOkoli++;
+                        poleMin[x+1][y].setPocetMinVOkoli(str);
+                        poleMin[x-1][y].setPocetMinVOkoli(str);
+                        poleMin[x][y-1].setPocetMinVOkoli(str);
+                        poleMin[x+1][y-1].setPocetMinVOkoli(str);
+                        poleMin[x-1][y-1].setPocetMinVOkoli(str);
                     }
                     else{
-                        poleMin[x][y-1].pocetMinVOkoli++;
-                        poleMin[x][y+1].pocetMinVOkoli++;
-                        poleMin[x+1][y+1].pocetMinVOkoli++;
-                        poleMin[x+1][y-1].pocetMinVOkoli++;
-                        poleMin[x-1][y-1].pocetMinVOkoli++;
-                        poleMin[x-1][y+1].pocetMinVOkoli++;
-                        poleMin[x+1][y].pocetMinVOkoli++;
-                        poleMin[x-1][y].pocetMinVOkoli++;
+                        poleMin[x][y-1].setPocetMinVOkoli(str);
+                        poleMin[x][y+1].setPocetMinVOkoli(str);
+                        poleMin[x+1][y+1].setPocetMinVOkoli(str);
+                        poleMin[x+1][y-1].setPocetMinVOkoli(str);
+                        poleMin[x-1][y-1].setPocetMinVOkoli(str);
+                        poleMin[x-1][y+1].setPocetMinVOkoli(str);
+                        poleMin[x+1][y].setPocetMinVOkoli(str);
+                        poleMin[x-1][y].setPocetMinVOkoli(str);
                     }
                 }
             }
@@ -171,12 +181,12 @@ public class FXMLDocumentController implements Initializable {
                         int x = (int)rect.getX()/40;
                         int y = (int)rect.getY()/40;
                         
-                        if (!poleMin[x][y].jePoKliknuti && !prohra && !vyhra) {
+                        if (!poleMin[x][y].isJePoKliknuti() && !prohra && !vyhra) {
                             System.out.println("Souřadnice: " + "[" + x + "," + y + "]");
-                            if (e.isPrimaryButtonDown()) {
+                            if (e.getButton() == MouseButton.PRIMARY && !poleMin[x][y].isJePraporek()) {
                                 poleMin[x][y].setJePoKliknuti(true);
                                 pocetVykliklich++;
-                                if (poleMin[x][y].jeMina) {
+                                if (poleMin[x][y].isJeMina()) {
                                     poleMin[x][y].setBarva(Color.RED);
                                     rect.setFill(poleMin[x][y].getBarva());
                                     System.out.println("Je mina");
@@ -202,8 +212,26 @@ public class FXMLDocumentController implements Initializable {
                                     }
                                 }
                             }
-                            else if (e.isSecondaryButtonDown()) {
+                            else if (e.getButton() == MouseButton.SECONDARY) {
                                 System.out.println("Secondary");
+                                if (!poleMin[x][y].isJePraporek() && pocetVlajecekCount > 0) {
+                                    poleMin[x][y].setBarva(Color.PINK);
+                                    poleMin[x][y].setJePraporek(true);
+                                    rect.setFill(poleMin[x][y].getBarva());
+                                    System.out.println("" + poleMin[x][y].isJePoKliknuti());
+                                    pocetVlajecekCount--;
+                                    pocetVlajecek.setText(String.valueOf(pocetVlajecekCount));
+                                    
+                                }
+                                else{
+                                    poleMin[x][y].setBarva(Color.WHITE);
+                                    poleMin[x][y].setJePraporek(false);
+                                    rect.setFill(poleMin[x][y].getBarva());
+                                    System.out.println(poleMin[x][y].isJePoKliknuti());
+                                    pocetVlajecekCount++;
+                                    pocetVlajecek.setText(String.valueOf(pocetVlajecekCount));
+                                }
+                                System.out.println("Praporek je nastaven na: " + poleMin[x][y].isJePraporek());
                             }
 
                             if (pocetVykliklich + pocetMin == pocetXYdlazdic * pocetXYdlazdic) {
@@ -220,7 +248,7 @@ public class FXMLDocumentController implements Initializable {
     }
     public void Uprava(int x, int y){
         Rectangle rect = rectPole[x][y];
-        if (!poleMin[x][y].jePoKliknuti && !poleMin[x][y].jeMina) {
+        if (!poleMin[x][y].isJePoKliknuti() && !poleMin[x][y].isJeMina()) {
             poleMin[x][y].setJePoKliknuti(true);
             pocetVykliklich++;
             if (poleMin[x][y].getPocetMinVOkoli() == 0) {

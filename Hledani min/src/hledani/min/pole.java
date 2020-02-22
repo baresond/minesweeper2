@@ -12,33 +12,34 @@ import javafx.scene.paint.Color;
  *
  * @author ondre
  */
-public class pole {//jeden ctverec v minovém poly
-    public boolean jeMina;
-    public boolean jePoKliknuti = false;
-    public Color barva = Color.WHITE;//DefaultBarva je bílá, po kliknuti s minou červená a bez šedá
-    public Point pozice;
-    public int pocetMinVOkoli = 0;//Pocitase jen když nemama minu
+public class Pole {//jeden ctverec v minovém poly
+    private boolean jeMina;
+    private boolean jePoKliknuti = false;
+    private boolean jePraporek = false;
+    private Color barva = Color.WHITE;//DefaultBarva je bílá, po kliknuti s minou červená a bez šedá
+    private Point pozice;
+    private int pocetMinVOkoli = 0;//Pocitase jen když nemama minu
 
-    public pole(Point pozice) {
+    public Pole(Point pozice) {
         this.pozice = pozice;
     }
-    public pole(Point pozice, boolean jeMina) {
-        this.pozice = pozice;
-        this.jeMina = jeMina;
-    }
-    public pole(Point pozice, boolean jeMina, boolean jePoKliknuti) {
+    public Pole(Point pozice, boolean jeMina) {
         this.pozice = pozice;
         this.jeMina = jeMina;
-        this.jePoKliknuti = this.jePoKliknuti;
     }
-    public pole(int x, int y){
+    public Pole(Point pozice, boolean jeMina, boolean jePoKliknuti) {
+        this.pozice = pozice;
+        this.jeMina = jeMina;
+        this.jePoKliknuti = jePoKliknuti;
+    }
+    public Pole(int x, int y){
         this.pozice = new Point(x,y);
     }
-    public pole(int x, int y, boolean jeMina) {
+    public Pole(int x, int y, boolean jeMina) {
         this.pozice = new Point(x,y);
         this.jeMina = jeMina;
     }
-    public pole(int x, int y, boolean jeMina, boolean jePoKliknuti) {
+    public Pole(int x, int y, boolean jeMina, boolean jePoKliknuti) {
         this.pozice = new Point(x,y);
         this.jeMina = jeMina;
         this.jePoKliknuti = this.jePoKliknuti;
@@ -82,4 +83,20 @@ public class pole {//jeden ctverec v minovém poly
     public void setPocetMinVOkoli(int pocetMinVOkoli) {
         this.pocetMinVOkoli = pocetMinVOkoli;
     }
+    public void setPocetMinVOkoli(String str){
+        if (str == "++") {
+            this.pocetMinVOkoli++;
+        }
+        else if (str == "--") {
+            this.pocetMinVOkoli--;
+        }
+    }
+    public boolean isJePraporek() {
+        return jePraporek;
+    }
+
+    public void setJePraporek(boolean jePraporek) {
+        this.jePraporek = jePraporek;
+    }
+    
 }
