@@ -9,6 +9,9 @@ import java.awt.Point;
 import java.net.URL;
 import java.util.Random;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -41,7 +44,8 @@ public class FXMLDocumentController implements Initializable {
     private AnchorPane paneMenu;
     @FXML
     private AnchorPane paneGameField;
-    
+
+    //<editor-fold desc="Promena">
     Pole[][] poleMin;
     Rectangle[][] rectPole;
     boolean prohra = false;
@@ -50,12 +54,14 @@ public class FXMLDocumentController implements Initializable {
     int pocetVlajecekCount = 0;
     int velikost = 20;
     int pocetPoli = 20;
+    boolean test = false;
     @FXML
     private AnchorPane form1;
     @FXML
     private SplitPane paneSplite;
     @FXML
     private Label pocetVlajecek;
+    //</editor-fold>
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -67,9 +73,9 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void btRefreshClick(ActionEvent event) {
-        double x = (pocetPoli*velikost) + (velikost);
+        double x = (pocetPoli*velikost) + (0);
         double y = x / 90;
-        int pocetMin = 25;
+        int pocetMin = 399;
         pocetVlajecekCount = pocetMin;
         y *= 100;
         form1.getScene().getWindow().setWidth(x);
@@ -180,6 +186,10 @@ public class FXMLDocumentController implements Initializable {
         for (int i = 0; i < pocetXYdlazdic; i++) {
             for (int j = 0; j < pocetXYdlazdic; j++) {
                 Rectangle rect = new Rectangle((velikost * i), (velikost * j), velikost, velikost);
+                if (poleMin[i][j].isJeMina() && test) {
+                    poleMin[i][j].setBarva(Color.RED);
+                    rect.setFill(poleMin[i][j].getBarva());
+                }
                 rect.setFill(poleMin[i][j].getBarva());
                 rect.setStroke(Color.BLACK);
                 rect.setOnMouseClicked(new EventHandler<MouseEvent>(){
@@ -199,6 +209,15 @@ public class FXMLDocumentController implements Initializable {
                                     rect.setFill(poleMin[x][y].getBarva());
                                     System.out.println("Je mina");
                                     prohra = true;
+                                    for (int k = 0; k < pocetXYdlazdic; k++) {
+                                        for (int l = 0; l < pocetXYdlazdic; l++) {
+                                            if(poleMin[k][l].isJeMina())
+                                            {
+                                                poleMin[k][l].setBarva(Color.RED);
+                                                rectPole[k][l].setFill(poleMin[k][l].getBarva());
+                                            }
+                                        }
+                                    }
                                     System.out.println("Prohra");
                                     Alert alert  = new Alert(Alert.AlertType.INFORMATION,"Prohra, pro opakování klikněta na restart", ButtonType.OK);
                                     alert.show();
