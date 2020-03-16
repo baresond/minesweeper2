@@ -11,22 +11,65 @@ import java.util.NoSuchElementException;
 /**
  *
  * @author micha
+ * @param <E>
  */
-public class AbstrDoubleList implements DoubleList<Object>{
-
+public abstract class AbstrDoubleList<E> implements DoubleList<Object>{
+    public AbstrDoubleList()
+    {
+    
+    }
+    public AbstrDoubleList(Prvek<E> prvni)
+    {
+        this.prvni = prvni;
+        pocet++;
+    }
+    private boolean isNext()
+    {
+        return aktualni.dalsi != null;
+    }
+    private boolean isFirst()
+    {
+        return prvni != null;
+    }
+    private boolean isLast()
+    {
+        return posledni != null;
+    }
+    private static class Prvek<E>
+    {
+        Prvek dalsi;
+        Prvek predchozi;
+        E data;
+        
+        public Prvek(Prvek dalsi, Prvek predchozi, E data)
+        {
+            this.dalsi = dalsi;
+            this.predchozi = predchozi;
+            this.data = data;
+        }
+        
+        public Prvek(E data)
+        {
+            this(null, null, data);
+        }
+    }
+    
+    Prvek<E> prvni, posledni, aktualni;
+    int velikost = 0, pocet = 0;
     @Override
     public void zrus() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        prvni = null;
+        pocet = 0;
     }
 
     @Override
     public boolean jePrazdny() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return prvni == null;
     }
 
     @Override
     public int getMohutnost() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return pocet;
     }
 
     @Override
@@ -51,52 +94,153 @@ public class AbstrDoubleList implements DoubleList<Object>{
 
     @Override
     public Object zpristupniAktualni() throws NoSuchElementException, KolekceException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (jePrazdny()) 
+        {
+            throw new NoSuchElementException("Prazdny seznam");
+        }
     }
 
     @Override
     public Object zpristupniPrvni() throws NoSuchElementException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (jePrazdny()) 
+        {
+            throw new NoSuchElementException("Prazdny seznam");
+        }
+        if (pocet > 0) {
+            aktualni = prvni;
+            return aktualni;
+        }
+        throw new KolekceException("Aktualni prvek není nastaven!");
     }
 
     @Override
     public Object zpristupniPosledni() throws NoSuchElementException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (jePrazdny()) 
+        {
+            throw new NoSuchElementException("Prazdny seznam");
+        }
+        if (pocet > 0 && posledni != null) 
+        {
+            aktualni = posledni;
+            return aktualni;
+        }
+        throw new KolekceException("Aktualni prvek není nastaven!");
     }
 
     @Override
     public Object zpristupniNaslednika() throws NoSuchElementException, KolekceException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (jePrazdny()) 
+        {
+            throw new NoSuchElementException("Prazdny seznam");
+        }
+        if (pocet > 0) 
+        {
+            if (aktualni != posledni) 
+            {
+                aktualni = aktualni.dalsi;
+            }
+            return aktualni;
+        }
+        throw new KolekceException("Aktualni prvek není nastaven!");
     }
 
     @Override
     public Object zpristupniPredchudce() throws NoSuchElementException, KolekceException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (jePrazdny()) 
+        {
+            throw new NoSuchElementException("Prazdny seznam");
+        }
+        if (pocet > 0) 
+        {
+            if (aktualni != prvni) 
+            {
+                aktualni = aktualni.predchozi;
+            }
+            return aktualni;
+        }
+        
+        throw new KolekceException("Aktualni prvek není nastaven!");
     }
 
     @Override
     public Object odeberAktualni() throws KolekceException, NoSuchElementException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (jePrazdny()) 
+        {
+            throw new NoSuchElementException("Prazdny seznam");
+        }
+        if (aktualni == prvni) 
+        {
+            return odeberPrvni();
+        }
+        else if (aktualni == posledni) 
+        {
+            return odeberPosledni();
+        }
+        else if (aktualni != null) 
+        {
+            E data = aktualni.data;
+            aktualni = aktualni.dalsi;
+            pocet--;
+            return data;
+        }
+        
+        throw new KolekceException("Aktualni prvek není nastaven!");
     }
 
     @Override
     public Object odeberPrvni() throws KolekceException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (jePrazdny()) 
+        {
+            throw new NoSuchElementException("Prazdny seznam");
+        }
+        if (prvni.dalsi != null) {
+            aktualni = prvni.dalsi;
+        }
+        E data = prvni.data;
+        pocet--;
+        return data;
     }
 
     @Override
     public Object odeberPosledni() throws KolekceException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (jePrazdny()) 
+        {
+            throw new NoSuchElementException("Prazdny seznam");
+        }
+        if (posledni.predchozi != null) {
+            aktualni = posledni.predchozi;
+        }
+        E data = posledni.data;
+        pocet--;
+        return data;
     }
 
     @Override
     public Object odeberNaslednika() throws KolekceException, NoSuchElementException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (jePrazdny()) 
+        {
+            throw new NoSuchElementException("Prazdny seznam");
+        }
+        if (aktualni.dalsi != null) {
+            E data = (E)aktualni.dalsi.data;
+            pocet--;
+            return data;
+        }
+        throw new KolekceException("Aktualni prvek není nastaven!");
     }
 
     @Override
     public Object odeberPredchudce() throws KolekceException, NoSuchElementException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (jePrazdny()) 
+        {
+            throw new NoSuchElementException("Prazdny seznam");
+        }
+        if (aktualni.predchozi != null) {
+            E data = (E)aktualni.predchozi.data;
+            pocet--;
+            return data;
+        }
+        throw new KolekceException("Aktualni prvek není nastaven!");
     }
 
     @Override
